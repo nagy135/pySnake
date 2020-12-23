@@ -45,9 +45,18 @@ class pySnake:
 
         self.food = INIT_FOOD
 
+        self.impossible_moves = {
+                'up': (0,1),
+                'left': (1,0),
+                'down': (0,-1),
+                'right': (-1,0),
+                }
+
 
 
     def player_move(self, direction):
+        if self.impossible_moves[direction] == self.direction:
+            return False
         if direction == 'up':
             self.direction = (0, -1)
         elif direction == 'left':
@@ -86,7 +95,7 @@ class pySnake:
             self.lenghten = not self.lenghten
 
         new_block = self.move_cell_direction(self.body[-1])
-        if self.hit_wall(new_block):
+        if self.hit_wall(new_block) or self.hit_self():
             self.end = True
             return
         self.body.append(new_block)
@@ -107,6 +116,12 @@ class pySnake:
         self.food[0] = random.randint(0, WIDTH / BRICK_SIZE)
         self.food[1] = random.randint(0, HEIGHT / BRICK_SIZE)
 
+    
+    def hit_self(self):
+        for cell in self.body[:-1]:
+            if cell == self.body[-1]:
+                return True
+        return False
 
 
 
